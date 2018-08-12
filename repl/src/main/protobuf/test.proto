@@ -3,11 +3,11 @@ syntax = "proto3";
 import "scalapb/scalapb.proto";
 
 option (scalapb.options) = {
-  package_name: "io.grpc.helloworld"
+  package_name: "main.scala.org.marvin.repl"
   flat_package: true
 };
 
-package helloworld;
+package repl;
 
 // The greeting service definition.
 service Greeter {
