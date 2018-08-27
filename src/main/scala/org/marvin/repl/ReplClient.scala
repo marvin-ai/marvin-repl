@@ -3,14 +3,18 @@ package org.marvin.repl
 import java.util.concurrent.TimeUnit
 import java.util.logging.{Level, Logger}
 
+import io.grpc.netty.{GrpcSslContexts, NettyChannelBuilder}
 import main.scala.org.marvin.repl.{CommandRequest, ToolboxGrpc}
 import main.scala.org.marvin.repl.ToolboxGrpc.ToolboxBlockingStub
-import io.grpc.{StatusRuntimeException, ManagedChannelBuilder, ManagedChannel}
+import io.grpc.{ManagedChannel, ManagedChannelBuilder, StatusRuntimeException}
 
 object ReplClient {
   def apply(host: String, port: Int): ReplClient = {
-    val channel =
-      ManagedChannelBuilder.forAddress(host, port).usePlaintext(true).build
+    val channel: ManagedChannel = NettyChannelBuilder
+      .forAddress(host, port)
+      .sslContext(GrpcSslContexts.forClient().trustManager(new java.io.File("src/main/resources/serverCC.crt")).build)
+      //.usePlaintext(true)
+      .build
     val blockingStub = ToolboxGrpc.blockingStub(channel)
     new ReplClient(channel, blockingStub)
   }

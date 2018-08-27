@@ -1,9 +1,12 @@
 package org.marvin.repl
 
+import java.io.{FileInputStream, InputStream}
 import java.util.logging.Logger
 
+import io.grpc.netty.NettyServerBuilder
 import io.grpc.{Server, ServerBuilder}
-import main.scala.org.marvin.repl.{ToolboxGrpc, CommandRequest, LoggerReply}
+import main.scala.org.marvin.repl.{CommandRequest, LoggerReply, ToolboxGrpc}
+import sourcecode.File
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -24,12 +27,17 @@ class ReplServer(executionContext: ExecutionContext) {
   self =>
   private[this] var server: Server = null
 
+  val CC = new java.io.File("src/main/resources/serverCC.crt")
+  val PK = new java.io.File("src/main/resources/serverPK.key")
+
   private def start(): Unit = {
     server = ServerBuilder
       .forPort(ReplServer.port)
+      .useTransportSecurity(CC, PK)
       .addService(ToolboxGrpc.bindService(new ReplService, executionContext))
       .build
       .start
+
     ReplServer.logger.info(
       "Server started, listening on " + ReplServer.port)
     sys.addShutdownHook {

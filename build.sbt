@@ -17,5 +17,7 @@ libraryDependencies ++= Seq(
   "io.grpc"              %  "grpc-netty"            % grpcJavaVersion,
   "com.thesamet.scalapb" %% "scalapb-runtime-grpc"  % scalapbVersion,
   // for JSON conversion
-  "com.thesamet.scalapb" %% "scalapb-json4s"        % "0.7.0"
+  "com.thesamet.scalapb" %% "scalapb-json4s"        % "0.7.0",
+  "io.netty" % "netty-handler" % "4.1.17.Final",
+  "io.netty" % "netty-tcnative-boringssl-static" % "2.0.7.Final"
 )
