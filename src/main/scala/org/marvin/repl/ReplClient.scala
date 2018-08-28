@@ -4,9 +4,9 @@ import java.util.concurrent.TimeUnit
 import java.util.logging.{Level, Logger}
 
 import io.grpc.netty.{GrpcSslContexts, NettyChannelBuilder}
-import main.scala.org.marvin.repl.{CommandRequest, ToolboxGrpc}
+import io.grpc.{ManagedChannel, StatusRuntimeException}
 import main.scala.org.marvin.repl.ToolboxGrpc.ToolboxBlockingStub
-import io.grpc.{ManagedChannel, ManagedChannelBuilder, StatusRuntimeException}
+import main.scala.org.marvin.repl.{CommandRequest, ToolboxGrpc}
 
 object ReplClient {
   def apply(host: String, port: Int): ReplClient = {

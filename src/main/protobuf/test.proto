@@ -16,9 +16,9 @@ service Toolbox {
 }
 
 // The Docker Control service definition.
-service Docker {
+service Notebook {
     // Sends a docker cmd
-    rpc DockerControl (CommandRequest) returns (LoggerReply) {}
+    rpc NotebookControl (CommandRequest) returns (stream LoggerReply) {}
 }
 
 // The request message containing the user's cmd from the client side.

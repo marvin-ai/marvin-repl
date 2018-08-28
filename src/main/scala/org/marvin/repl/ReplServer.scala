@@ -1,12 +1,10 @@
 package org.marvin.repl
 
-import java.io.{FileInputStream, InputStream}
 import java.util.logging.Logger
 
-import io.grpc.netty.NettyServerBuilder
+import io.grpc.stub.StreamObserver
 import io.grpc.{Server, ServerBuilder}
-import main.scala.org.marvin.repl.{CommandRequest, LoggerReply, ToolboxGrpc}
-import sourcecode.File
+import main.scala.org.marvin.repl.{CommandRequest, LoggerReply, NotebookGrpc, ToolboxGrpc}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -62,6 +60,13 @@ class ReplServer(executionContext: ExecutionContext) {
 
   private class ReplService extends ToolboxGrpc.Toolbox {
     override def toolboxControl(req: CommandRequest): Future[LoggerReply] = {
+      val reply = LoggerReply(logInfo = "Hello " + req.cmd)
+      Future.successful(reply)
+    }
+  }
+
+  private class NotebookService extends  NotebookGrpc.Notebook {
+    override def notebookControl(req: CommandRequest, responseObserver: StreamObserver[LoggerReply]): Unit = {
       val reply = LoggerReply(logInfo = "Hello " + req.cmd)
       Future.successful(reply)
     }
