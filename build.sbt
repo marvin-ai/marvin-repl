@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
   "io.grpc"              %  "grpc-netty"            % grpcJavaVersion,
   "com.thesamet.scalapb" %% "scalapb-runtime-grpc"  % scalapbVersion,
   // for JSON conversion
-  "com.thesamet.scalapb" %% "scalapb-json4s"        % scalapbVersion
+  "com.thesamet.scalapb" %% "scalapb-json4s"        % "0.7.0"
 )
 
 scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
