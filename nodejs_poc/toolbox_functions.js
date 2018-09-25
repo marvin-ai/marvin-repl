@@ -10,9 +10,28 @@ function containerManagement(imageName, containerName) {
 		Image: imageName,
 		name: containerName
 	})
-	.then((container) => container.start())
-	// .then((container) => container.stop())
-	// .then((container) => container.restart())
-	// .then((container) => container.delete({ force: true }))
-	.catch((error) => console.log(error))
+	  .then((container) => container.start())
+	  // .then((container) => container.stop())
+	  // .then((container) => container.restart())
+	  // .then((container) => container.delete({ force: true }))
+	  .catch((error) => console.log(error))
+}
+
+
+// Create and get container's logs.
+function containerLogs(imageName, containerName) {
+	docker.container.create({
+		Image: imageName,
+		name: containerName
+	})
+	  .then(container => container.logs({
+	  	follow: true,
+	  	stdout: true,
+	  	stderr: true
+	  }))
+	  .then(stream => {
+	  	stream.on('data', info => console.log(info))
+	  	stream.om('error', err => console.log(err))
+	  })
+	  .catch(error => console.log(error))
 }
