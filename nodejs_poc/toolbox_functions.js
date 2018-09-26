@@ -4,7 +4,7 @@ const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 var imageName = 'marvinaiplatform/marvin-automl:0.0.1'
 var containerName = 'docker-api-test'
 
-// Creation and management of docker container.
+// Management of docker container.
 function containerManagement(imageName, containerName) {
 	docker.container.create({
 		Image: imageName,
@@ -31,7 +31,7 @@ function containerLogs(imageName, containerName) {
 	  }))
 	  .then(stream => {
 	  	stream.on('data', info => console.log(info))
-	  	stream.om('error', err => console.log(err))
+	  	stream.on('error', err => console.log(err))
 	  })
 	  .catch(error => console.log(error))
 }
