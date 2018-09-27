@@ -31,6 +31,9 @@ docker.container.create({
   		Cmd: ['workon python-toolbox-env', 'marvin engine-generate']
   	})
   })
+  .then(exec => {
+    return exec.start({ Detach: false })
+  })
   .then(stream => promisifyStream(stream))
   .catch(error => console.log(error));
 
