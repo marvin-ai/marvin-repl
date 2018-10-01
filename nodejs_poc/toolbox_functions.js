@@ -2,7 +2,7 @@
 'use strict';
 
 var imageName = 'marvinaiplatform/marvin-automl:0.0.1'
-var containerName = 'docker-api-test'
+var containerName = 'docker-api-test13'
 
 const {Docker} = require('node-docker-api');
 
@@ -26,16 +26,13 @@ docker.container.create({
   .then(container => {
   	_container = container
   	return container.exec.create({
-  		AttachStdout: true,
-  		AttachStderr: true,
-  		Cmd: ['workon python-toolbox-env', 'marvin engine-generate']
-  	})
+      	  AttachStdout: true,
+      	  AttachStderr: true,
+      	  Cmd: [ '/bin/bash', '-c', 'source /usr/local/bin/virtualenvwrapper.sh ; workon marvin-engine-env ; cd /opt/marvin/engine/ ; marvin notebook --allow-root -p 9999 ' ]
+    })
   })
   .then(exec => {
     return exec.start({ Detach: false })
   })
   .then(stream => promisifyStream(stream))
   .catch(error => console.log(error));
-
-  ### TO DO ###
-  // User instructions for inserting project name, maintainer name and etc....
