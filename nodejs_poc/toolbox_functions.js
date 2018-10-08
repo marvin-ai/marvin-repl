@@ -1,5 +1,10 @@
 const Docker = require('node-docker-api').Docker
-const docker = new Docker({ socketPath: '/var/run/docker.sock' })
+const fs = require('fs')
+const docker = new Docker({ 
+	socketPath: '/var/run/docker.sock',
+    cert: fs.readFileSync('cert.pem'),
+    key: fs.readFileSync('key.pem')
+})
 
 var imageName = 'marvinaiplatform/marvin-automl:0.0.1'
 var containerName = 'docker-api-test'
@@ -10,6 +15,7 @@ function engineGenerateSDK(imageName, containerName) {
 		Image: imageName,
 		name: containerName
 	})
+	  .then(container => container.start())
 	  .then(container => container.logs({
 	  	follow: true,
 	  	stdout: true,
