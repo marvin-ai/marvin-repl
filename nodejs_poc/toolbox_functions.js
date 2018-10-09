@@ -5,10 +5,7 @@ const {Docker} = require('node-docker-api');
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 const repl = require('repl');
 
-var imageName = 'marvinaiplatform/marvin-automl:0.0.1';
-var containerName = 'docker-api-test13';
-
-function notebookSDK(imageName, containerName) {
+function notebookSDK() {
 
 	let _container;
 
@@ -21,9 +18,9 @@ function notebookSDK(imageName, containerName) {
 
 	// Start container, run engine generate command and capture logs
 	docker.container.create({
-		Image: imageName,
+		Image: 'marvinaiplatform/marvin-automl:0.0.1',
 		Cmd: [ '/bin/bash', '-c', 'tail -f /var/log/dmesg' ],
-		name: containerName
+		name: 'docker-api-test'
 	})
 	.then(container => container.start())
 	.then(container => {
@@ -42,7 +39,7 @@ function notebookSDK(imageName, containerName) {
 }
 
 var replServer = repl.start({
-	prompt: "marvin >",
+	prompt: "marvin > ",
 });
 
-replServer.context.engine_generate = notebookSDK(imageName, containerName)
+replServer.context.notebook = notebookSDK
