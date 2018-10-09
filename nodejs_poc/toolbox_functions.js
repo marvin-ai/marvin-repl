@@ -3,9 +3,10 @@
 
 const {Docker} = require('node-docker-api');
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
+const repl = require('repl');
 
-var imageName = 'marvinaiplatform/marvin-automl:0.0.1'
-var containerName = 'docker-api-test13'
+var imageName = 'marvinaiplatform/marvin-automl:0.0.1';
+var containerName = 'docker-api-test13';
 
 function notebookSDK(imageName, containerName) {
 
@@ -39,3 +40,9 @@ function notebookSDK(imageName, containerName) {
 	.then(stream => promisifyStream(stream))
 	.catch(error => console.log(error));
 }
+
+var replServer = repl.start({
+	prompt: "marvin >",
+});
+
+replServer.context.engine_generate = notebookSDK(imageName, containerName)
