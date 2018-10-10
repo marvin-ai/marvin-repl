@@ -1,19 +1,17 @@
-const Docker = require('node-docker-api').Docker
-const fs = require('fs')
+const Docker = require('node-docker-api').Docker;
+const fs = require('fs');
+const repl = require('repl');
 const docker = new Docker({ 
 	socketPath: '/var/run/docker.sock',
     cert: fs.readFileSync('cert.pem'),
     key: fs.readFileSync('key.pem')
-})
-
-var imageName = 'marvinaiplatform/marvin-automl:0.0.1'
-var containerName = 'docker-api-test'
+});
 
 // Engine-generate command here is mapped to a simple container start up.
-function engineGenerateSDK(imageName, containerName) {
+function engineGenerateSDK() {
 	docker.container.create({
-		Image: imageName,
-		name: containerName
+		Image: 'marvinaiplatform/marvin-automl:0.0.1',
+		name: 'docker-api-test'
 	})
 	  .then(container => container.start())
 	  .then(container => container.logs({
@@ -27,3 +25,9 @@ function engineGenerateSDK(imageName, containerName) {
 	  })
 	  .catch(error => console.log(error))
 }
+
+var replServer = repl.start({
+	prompt: "marvin >",
+});
+
+replServer.context.engine_generate = engineGenerateSDK
