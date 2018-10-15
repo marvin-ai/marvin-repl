@@ -2,7 +2,12 @@
 'use strict';
 
 const {Docker} = require('node-docker-api');
-const docker = new Docker({ socketPath: '/var/run/docker.sock' });
+const fs = require('fs');
+const docker = new Docker({ 
+	socketPath: '/var/run/docker.sock',
+    cert: fs.readFileSync('cert.pem'),
+    key: fs.readFileSync('key.pem')
+});
 const repl = require('repl');
 
 function notebookSDK() {
@@ -38,8 +43,28 @@ function notebookSDK() {
 	.catch(error => console.log(error));
 }
 
+// Engine-generate command here is mapped to a simple container start up.
+function engineGenerateSDK() {
+	docker.container.create({
+		Image: 'marvinaiplatform/marvin-automl:0.0.1',
+		name: 'docker-api-test'
+	})
+	  .then(container => container.start())
+	  .then(container => container.logs({
+	  	follow: true,
+	  	stdout: true,
+	  	stderr: true
+	  }))
+	  .then(stream => {
+	  	stream.on('data', info => console.log(info))
+	  	stream.on('error', err => console.log(err))
+	  })
+	  .catch(error => console.log(error))
+}
+
 var replServer = repl.start({
 	prompt: "marvin > ",
 });
 
 replServer.context.notebook = notebookSDK
+replServer.context.engine_generate = engineGenerateSDK
